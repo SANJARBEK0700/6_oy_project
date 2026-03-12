@@ -8,8 +8,7 @@ email_regex = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
 phone_regex = re.compile(r'^998([378]{2}|(9[013-57-9]))\d{7}$')
 
-username_regex=re.compile(r'/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i')
-
+username_regex = re.compile(r'^[a-zA-Z0-9_-]{3,30}$')
 def check_email_or_phone(user_input):
     if re.fullmatch(email_regex, user_input):
         data = 'email'

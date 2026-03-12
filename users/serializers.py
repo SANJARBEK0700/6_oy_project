@@ -2,10 +2,9 @@ from django.db.models import Q
 from rest_framework import serializers, status
 from .models import CodeVerify, CustomUser, VIA_EMAIL, VIA_PHONE, CODE_VERIFY, DONE, PHOTO_DONE
 from rest_framework.exceptions import ValidationError
-from shared.utility import check_email_or_phone,check_check_email_or_phone_or_username
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from shared.utility import check_email_or_phone, check_email_or_phone_or_username
 class SignupSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     auth_status = serializers.CharField(read_only=True)
@@ -167,7 +166,7 @@ class UserPhotoStatusSerializer(serializers.Serializer):
         return instance
 
 
-class LoginSerializer(TokenObtainPairSerializer):
+class LoginSerializer(TokenObtainPairView):
     password=serializers.CharField(required=True,write_only=True)
 
     def __init__(self,*args,**kwargs):
@@ -175,9 +174,8 @@ class LoginSerializer(TokenObtainPairSerializer):
         self.fields['user_input']=serializers.CharField(required=True,write_only=True)
         self.fields['username']=serializers.CharField(read_only=True)
 
-
     def validate(self, attrs):
-        self.check_user_type(attrs)
+        data = self.check_user_type(attrs)
         return data
 
 
@@ -204,7 +202,7 @@ class LoginSerializer(TokenObtainPairSerializer):
             raise ValidationError(detail="Ma'lumot topilmadi")
         authentication_kwargs = {
             "password": password,
-            self.username _field: username
+            self.username_field: username
         }
 
         if user.auth_login not in [DONE, PHOTO_DONE]:
